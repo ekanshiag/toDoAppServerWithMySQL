@@ -76,8 +76,16 @@ exports.updateTask = (req, res, next) => {
 
 exports.deleteTask = (req, res, next) => {
   const id = req.params.taskId
-  res.status(200).json({
-    message: 'Delete a task',
-    id: id
-  })
+  let table = connection.schema.getTable('tasks')
+
+  table.delete()
+    .where('_id = :id')
+    .bind('id', id)
+    .execute()
+    .then(() => {
+      res.status(200).json('Task deleted successfully')
+    })
+    .catch(err => {
+      res.status(500).json(err)
+    })
 }
