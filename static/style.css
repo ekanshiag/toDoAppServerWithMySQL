@@ -1,0 +1,110 @@
+html{
+	font-size: 10px;
+	font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  	background-color:  #eff2f6;
+}
+body{
+	margin:0;
+	background-color:  #e6f2ff;
+}
+
+section span{
+	display: block;
+	font-size: 2em;
+	text-align: center;
+	padding-left: 2px;
+	font-weight: bold;
+}
+
+footer span{
+	display: block;
+	font-size: 2em;
+	text-align: center;
+	padding-left: 2px;
+	font-weight: bold;
+}
+
+section div, footer div, #newTask, div textarea{
+	font-family: 'Avenir', Helvetica, Arial, sans-serif;
+}
+
+section > div > div, footer > div > div{
+  border: 3px solid #adbdd1;
+  border-radius: 1em;
+  background-color: #dee5ed;
+  box-sizing: content-box;
+  margin: 0.5em;
+  padding: 1em;
+}
+
+div div{
+	margin: 1em;
+}
+#newTaskBar #newTask{
+	margin-top: 2em;
+  width: 98%;
+  height: 2em;
+  color: #070707;
+  border: 3px solid #ced7e3;
+  border-radius: 1em;
+}
+
+section, footer{
+	font-size: 1.5em;
+	margin: 20px;
+}
+
+#options{
+	border: 0;
+	padding: 0;
+	margin-left: 20px;
+}
+
+p{
+	display: inline;
+	padding-left: 20px;
+}
+
+#moreOptions{
+	display: grid;
+	position: relative;
+	grid-template-columns:3fr 1fr 1fr;
+	column-gap: 10px;
+	row-gap:0px;
+	gap:10 px;
+}
+
+#moreOptions #notePointer{
+	grid-column:1;
+	grid-row:1;
+}
+
+#moreOptions #note{
+	grid-column:1;
+	grid-row:2/6;
+}
+
+#moreOptions #dueDatePointer{
+	grid-column:2/4;
+	grid-row:1;
+}
+
+#moreOptions #taskDueBy{
+	grid-column:2/4;
+	grid-row:2;
+}
+
+#moreOptions #priorityPointer{
+	grid-column:2/4;
+	grid-row:3;
+}
+
+#moreOptions #Priority{
+	grid-column:2/4;
+	grid-row:4;
+}
+
+#moreOptions #delete{
+	grid-column:3;
+	grid-row:6;
+}
