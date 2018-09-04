@@ -68,10 +68,25 @@ exports.postTask = (req, res, next) => {
 
 exports.updateTask = (req, res, next) => {
   const id = req.params.taskId
-  res.status(200).json({
-    message: 'Updating a task',
-    id: id
-  })
+  let promises = []
+  let table = connection.schema.getTable('tasks')
+  for (let field in req.body) {
+    let x = table.update()
+      .set(field, req.body[field])
+      .where('_id = :id')
+      .bind('id', id)
+      .execute()
+
+    promises.push(x)
+  }
+
+  Promise.all(promises)
+    .then(() => {
+      res.status(200).json('Task updated succesfully')
+    })
+    .catch(err => {
+      res.status(500).json(err)
+    })
 }
 
 exports.deleteTask = (req, res, next) => {
