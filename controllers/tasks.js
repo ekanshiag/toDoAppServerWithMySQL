@@ -1,52 +1,91 @@
-const mysql = require('mysql')
-const connection = mysql.createConnection({
-    host: "localhost",
-    user: "myTasks",
-    password: "tasks",
-    database: "task_db"
-})
+const mysqlx = require('@mysql/xdevapi')
 
-connection.connect()
+const config = {
+  password: 'sql123',
+  user: 'root',
+  host: 'localhost',
+  port: 33060
+}
+
+const connection = {}
+
+mysqlx
+  .getSession(config)
+  .then(session => {
+    connection.session = session
+    return session.sql('CREATE DATABASE IF NOT EXISTS task_db')
+      .execute()
+  })
+  .then(() => {
+    connection.schema = connection.session.getSchema('task_db')
+    return connection.session
+      .sql('CREATE TABLE IF NOT EXISTS task_db.tasks (_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, descr VARCHAR(255), category ENUM("Open", "Closed"), notes VARCHAR(255), dueDate VARCHAR(255), priority ENUM("Low", "Medium", "High"))')
+      .execute()
+  })
+  .catch(err => {
+    console.log(err)
+  })
 
 exports.getAllTasks = (req, res, next) => {
-    res.status(200).json({
-        message: 'Handling GET requests to /tasks'
+  connection.session.sql('SELECT COUNT(*) FROM task_db.tasks')
+    .execute(c => {
+      let x = c.pop()
+      if (x === 0) {
+        res.status(200).json([])
+      }
+    })
+  let table = connection.schema.getTable('tasks')
+  let result = []
+  return table.select('_id', 'descr', 'category', 'notes', 'dueDate', 'priority')
+    .orderBy('_id')
+    .execute(row => {
+      result.push(row)
+    })
+    .then(() => {
+      res.status(200).json(result)
     })
 }
 
 exports.postTask = (req, res, next) => {
-    const task = {
-        desc: req.body.desc,
-        notes: '',
-        dueDate: '',
-        priority: ''
-    }
-    res.status(200).json({
-        message: 'Handling POST requests to /tasks',
-        createdTask: task
+  let fields = []
+  let fieldValues = []
+  for (let field in req.body) {
+    fields.push(field)
+    fieldValues.push(req.body[field])
+  }
+  let table = connection.schema.getTable('tasks')
+
+  table.insert(fields)
+    .values(fieldValues)
+    .execute()
+    .then(() => {
+      res.status(200).json('Task created successfully')
+    })
+    .catch(err => {
+      res.status(500).json(err)
     })
 }
 
 exports.getOneTask = (req, res, next) => {
-    const id = req.params.taskId
-    res.status(200).json({
-        message: "Accessing a id",
-        id: id
-    })
+  const id = req.params.taskId
+  res.status(200).json({
+    message: 'Accessing a id',
+    id: id
+  })
 }
 
 exports.updateTask = (req, res, next) => {
-    const id = req.params.taskId
-    res.status(200).json({
-        message: "Updating a task",
-        id: id
-    })
+  const id = req.params.taskId
+  res.status(200).json({
+    message: 'Updating a task',
+    id: id
+  })
 }
 
 exports.deleteTask = (req, res, next) => {
-    const id = req.params.taskId
-    res.status(200).json({
-        message: "Delete a task",
-        id: id
-    })
+  const id = req.params.taskId
+  res.status(200).json({
+    message: 'Delete a task',
+    id: id
+  })
 }
