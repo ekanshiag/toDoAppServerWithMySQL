@@ -66,14 +66,6 @@ exports.postTask = (req, res, next) => {
     })
 }
 
-exports.getOneTask = (req, res, next) => {
-  const id = req.params.taskId
-  res.status(200).json({
-    message: 'Accessing a id',
-    id: id
-  })
-}
-
 exports.updateTask = (req, res, next) => {
   const id = req.params.taskId
   res.status(200).json({
