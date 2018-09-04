@@ -68,7 +68,7 @@ exports.postTask = (req, res, next) => {
 }
 
 exports.updateTask = (req, res, next) => {
-  const id = req.params.taskId
+  const id = Number(req.params.taskId)
   let promises = []
   let table = connection.schema.getTable('tasks')
   for (let field in req.body) {
