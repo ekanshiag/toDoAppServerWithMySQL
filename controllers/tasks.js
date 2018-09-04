@@ -1,7 +1,8 @@
 const mysqlx = require('@mysql/xdevapi')
+const password = require('../secret.js')
 
 const config = {
-  password: 'sql123',
+  password,
   user: 'root',
   host: 'localhost',
   port: 33060
